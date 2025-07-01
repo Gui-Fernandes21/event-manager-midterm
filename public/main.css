@@ -1,0 +1,428 @@
+/* Define styles */
+
+/* Reset and base styles */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	min-height: 100vh;
+	color: #333;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+/* Header styles */
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 30px;
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+	padding: 20px 30px;
+	border-radius: 15px;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header h1 {
+	color: white;
+	font-size: 2.5rem;
+	font-weight: 300;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Button styles */
+.btn {
+	padding: 12px 24px;
+	border: none;
+	border-radius: 8px;
+	text-decoration: none;
+	display: inline-block;
+	font-weight: 500;
+	text-align: center;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-size: 14px;
+}
+
+.btn-primary {
+	background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+	color: white;
+	box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.btn-primary:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.btn-secondary {
+	background: linear-gradient(45deg, #74b9ff, #0984e3);
+	color: white;
+	box-shadow: 0 3px 10px rgba(116, 185, 255, 0.3);
+}
+
+.btn-secondary:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 15px rgba(116, 185, 255, 0.4);
+}
+
+.btn-outline {
+	background: transparent;
+	border: 2px solid #ddd;
+	color: #666;
+}
+
+.btn-outline:hover {
+	background: #f8f9fa;
+	border-color: #007bff;
+	color: #007bff;
+}
+
+.btn-sm {
+	padding: 8px 16px;
+	font-size: 12px;
+}
+
+/* Users grid */
+.users-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	gap: 25px;
+	margin-top: 20px;
+}
+
+/* User card styles */
+.user-card {
+	background: white;
+	border-radius: 20px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	transition: all 0.3s ease;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.user-card-header {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	padding: 30px 20px;
+	text-align: center;
+	position: relative;
+}
+
+.user-avatar {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(10px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto;
+	font-size: 2rem;
+	font-weight: bold;
+	color: white;
+	border: 3px solid rgba(255, 255, 255, 0.3);
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.user-card-body {
+	padding: 25px 20px;
+	text-align: center;
+}
+
+.user-name {
+	font-size: 1.4rem;
+	font-weight: 600;
+	color: #2c3e50;
+	margin-bottom: 8px;
+}
+
+.user-id {
+	color: #7f8c8d;
+	font-size: 0.9rem;
+	font-weight: 500;
+	background: #f8f9fa;
+	padding: 5px 15px;
+	border-radius: 15px;
+	display: inline-block;
+}
+
+.user-card-footer {
+	padding: 0 20px 25px;
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+}
+
+/* No users state */
+.no-users {
+	grid-column: 1 / -1;
+	text-align: center;
+	padding: 60px 20px;
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+	border-radius: 20px;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.no-users h3 {
+	color: white;
+	font-size: 1.8rem;
+	margin-bottom: 10px;
+	font-weight: 300;
+}
+
+.no-users p {
+	color: rgba(255, 255, 255, 0.8);
+	font-size: 1.1rem;
+	margin-bottom: 30px;
+}
+
+/* Form styles for add-user page */
+form {
+	background: white;
+	padding: 40px;
+	border-radius: 20px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+	max-width: 500px;
+	margin: 50px auto;
+}
+
+form h1 {
+	color: #2c3e50;
+	margin-bottom: 30px;
+	text-align: center;
+	font-weight: 300;
+}
+
+form p {
+	margin-bottom: 20px;
+}
+
+form label {
+	display: block;
+	margin-bottom: 8px;
+	color: #555;
+	font-weight: 500;
+}
+
+form input[type="text"] {
+	width: 100%;
+	padding: 15px;
+	border: 2px solid #e9ecef;
+	border-radius: 10px;
+	font-size: 16px;
+	transition: border-color 0.3s ease;
+}
+
+form input[type="text"]:focus {
+	outline: none;
+	border-color: #667eea;
+	box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+form button[type="submit"] {
+	width: 100%;
+	margin-top: 20px;
+}
+
+/* Authentication Styles */
+.auth-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	padding: 20px;
+}
+
+.auth-card {
+	background: white;
+	border-radius: 20px;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+	padding: 40px;
+	width: 100%;
+	max-width: 400px;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.auth-header {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.auth-header h1 {
+	color: #2c3e50;
+	font-size: 2rem;
+	font-weight: 300;
+	margin-bottom: 8px;
+}
+
+.auth-header p {
+	color: #7f8c8d;
+	font-size: 1rem;
+}
+
+.auth-form {
+	margin-bottom: 20px;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 8px;
+	color: #555;
+	font-weight: 500;
+	font-size: 14px;
+}
+
+.form-group input {
+	width: 100%;
+	padding: 15px;
+	border: 2px solid #e9ecef;
+	border-radius: 10px;
+	font-size: 16px;
+	transition: border-color 0.3s ease;
+	background: #f8f9fa;
+}
+
+.form-group input:focus {
+	outline: none;
+	border-color: #667eea;
+	background: white;
+	box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-note {
+	color: #6c757d;
+	font-size: 12px;
+	margin-top: 5px;
+	font-style: italic;
+}
+
+.btn-full {
+	width: 100%;
+	padding: 15px;
+	font-size: 16px;
+	margin-top: 10px;
+}
+
+.auth-footer {
+	text-align: center;
+	padding-top: 20px;
+	border-top: 1px solid #e9ecef;
+}
+
+.auth-footer p {
+	color: #6c757d;
+	font-size: 14px;
+}
+
+.auth-footer a {
+	color: #667eea;
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.auth-footer a:hover {
+	text-decoration: underline;
+}
+
+/* Alert Styles */
+.alert {
+	padding: 15px;
+	border-radius: 8px;
+	margin-bottom: 20px;
+	font-size: 14px;
+}
+
+.alert-error {
+	background: #f8d7da;
+	border: 1px solid #f5c6cb;
+	color: #721c24;
+}
+
+.alert-success {
+	background: #d4edda;
+	border: 1px solid #c3e6cb;
+	color: #155724;
+}
+
+.alert-warning {
+	background: #fff3cd;
+	border: 1px solid #ffeaa7;
+	color: #856404;
+}
+
+/* Navigation Styles for Authenticated Users */
+.nav-user {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+}
+
+.nav-user-info {
+	color: white;
+	font-size: 14px;
+}
+
+.nav-user-name {
+	font-weight: 600;
+}
+
+.btn-logout {
+	background: rgba(255, 255, 255, 0.1);
+	color: white;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	padding: 8px 16px;
+	font-size: 12px;
+}
+
+.btn-logout:hover {
+	background: rgba(255, 255, 255, 0.2);
+	transform: none;
+	box-shadow: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+	.container {
+		padding: 15px;
+	}
+
+	.header {
+		flex-direction: column;
+		gap: 20px;
+		text-align: center;
+	}
+
+	.header h1 {
+		font-size: 2rem;
+	}
+
+	.users-grid {
+		grid-template-columns: 1fr;
+		gap: 20px;
+	}
+
+	.user-card-footer {
+		flex-direction: column;
+	}
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="/main.css" />
+		<title>Login - User Management</title>
+	</head>
+	<body>
+		<div class="auth-container">
+			<div class="auth-card">
+				<div class="auth-header">
+					<h1>Welcome Back</h1>
+					<p>Sign in to your account</p>
+				</div>
+
+				<% if (error) { %>
+				<div class="alert alert-error"><%= error %></div>
+				<% } %>
+
+				<form action="/auth/login" method="post" class="auth-form">
+					<div class="form-group">
+						<label for="user_name">Username</label>
+						<input
+							type="text"
+							id="user_name"
+							name="user_name"
+							placeholder="Enter your username"
+							required
+						/>
+					</div>
+
+					<div class="form-group">
+						<label for="password">Password</label>
+						<input
+							type="password"
+							id="password"
+							name="password"
+							placeholder="Enter your password"
+						/>
+						<small class="form-note"
+							>Note: This demo doesn't require a password</small
+						>
+					</div>
+
+					<button type="submit" class="btn btn-primary btn-full">
+						Sign In
+					</button>
+				</form>
+
+				<div class="auth-footer">
+					<p>
+						Don't have an account? <a href="/auth/register">Create one here</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

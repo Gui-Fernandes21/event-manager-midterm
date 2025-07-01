@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+    <title>Add User</title>
+</head>
+<body>
+    <div class="container">
+        <form action="add-user" method="post">
+            <h1>Add New User</h1>
+            <p>
+                <label for="user">User Name:</label>
+                <input id="user" type="text" name="user_name" placeholder="Enter user name" required />
+            </p>
+            <button type="submit" class="btn btn-primary">Create New User</button>
+            <a href="/users/list-users" class="btn btn-outline" style="margin-top: 15px;">Back to User List</a>
+        </form>
+    </div>
+</body>
+</html>

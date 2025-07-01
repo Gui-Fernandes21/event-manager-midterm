@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="/main.css" />
+		<title>User List</title>
+	</head>
+	<body>
+		<div class="container">		<header class="header">
+			<h1>User Directory</h1>
+			<div class="nav-user">
+				<% if (typeof user !== 'undefined' && user) { %>
+					<div class="nav-user-info">
+						Welcome, <span class="nav-user-name"><%= user.user_name %></span>
+					</div>
+					<a href="/auth/logout" class="btn btn-logout">Logout</a>
+				<% } %>
+				<a href="/users/add-user" class="btn btn-primary">Add New User</a>
+			</div>
+		</header>
+
+			<div class="users-grid">
+				<% if (users && users.length > 0) { %> <% users.forEach(function(user) {
+				%>
+				<div class="user-card">
+					<div class="user-card-header">
+						<div class="user-avatar">
+							<%= user.user_name.charAt(0).toUpperCase() %>
+						</div>
+					</div>
+					<div class="user-card-body">
+						<h3 class="user-name"><%= user.user_name %></h3>
+						<p class="user-id">ID: <%= user.user_id %></p>
+					</div>
+					<div class="user-card-footer">
+						<button class="btn btn-secondary btn-sm">View Details</button>
+						<button class="btn btn-outline btn-sm">Edit</button>
+					</div>
+				</div>
+				<% }); %> <% } else { %>
+				<div class="no-users">
+					<h3>No users found</h3>
+					<p>Start by adding your first user!</p>
+					<a href="/users/add-user" class="btn btn-primary">Add User</a>
+				</div>
+				<% } %>
+			</div>
+		</div>
+	</body>
+</html>
