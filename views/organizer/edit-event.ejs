@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="/main.css" />
+		<title>Edit Event - EventFlow Manager</title>
+	</head>
+	<body>
+		<div class="container">
+			<header class="header">
+				<h1>Edit Event</h1>
+				<div class="header-actions">
+					<a href="/organizer" class="btn btn-secondary">Back to Dashboard</a>
+					<% if (typeof user !== 'undefined' && user) { %>
+					<div class="nav-user-info">
+						<span class="nav-user-name"><%= user.user_name %></span>
+					</div>
+					<a href="/auth/logout" class="btn btn-logout">Logout</a>
+					<% } %>
+				</div>
+			</header>
+
+			<div class="edit-event-container">
+				<form
+					action="/organizer/edit-event/<%= event.event_id %>"
+					method="post"
+					class="event-form"
+				>
+					<div class="form-section">
+						<h2>Event Details</h2>
+
+						<div class="form-group">
+							<label for="title">Event Title *</label>
+							<input
+								type="text"
+								id="title"
+								name="title"
+								value="<%= event.title %>"
+								placeholder="Enter event title"
+								required
+							/>
+						</div>
+
+						<div class="form-group">
+							<label for="description">Event Description</label>
+							<textarea
+								id="description"
+								name="description"
+								rows="5"
+								placeholder="Describe your event..."
+							>
+<%= event.description || '' %></textarea
+							>
+						</div>
+
+						<div class="form-group">
+							<label for="date">Event Date & Time *</label>
+							<input
+								type="datetime-local"
+								id="date"
+								name="date"
+								value="<%= formattedDate %>"
+								required
+							/>
+						</div>
+					</div>
+
+					<div class="form-section">
+						<h2>Ticket Information</h2>
+
+						<div class="form-row">
+							<div class="form-group">
+								<label for="tickets_general">General Tickets</label>
+								<input
+									type="number"
+									id="tickets_general"
+									name="tickets_general"
+									value="<%= event.tickets_general %>"
+									min="0"
+									placeholder="0"
+								/>
+							</div>
+
+							<div class="form-group">
+								<label for="tickets_vip">VIP Tickets</label>
+								<input
+									type="number"
+									id="tickets_vip"
+									name="tickets_vip"
+									value="<%= event.tickets_vip %>"
+									min="0"
+									placeholder="0"
+								/>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-section">
+						<h2>Event Status</h2>
+						<div class="status-info">
+							<p>
+								<strong>Current Status:</strong>
+								<span class="status-badge status-<%= event.status %>">
+									<%= event.status.charAt(0).toUpperCase() +
+									event.status.slice(1) %>
+								</span>
+							</p>
+							<% if (event.status === 'draft') { %>
+							<p class="status-note">
+								This event is currently a draft. Save your changes and return to
+								the dashboard to publish it.
+							</p>
+							<% } else { %>
+							<p class="status-note">
+								This event was published on <%= new
+								Date(event.publishedAt).toLocaleDateString() %>.
+							</p>
+							<% } %>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button type="submit" class="btn btn-primary btn-large">
+							Save Changes
+						</button>
+						<a href="/organizer" class="btn btn-outline btn-large">Cancel</a>
+
+						<% if (event.status === 'draft') { %>
+						<div class="publish-section">
+							<p>Ready to publish this event?</p>
+							<a href="/organizer" class="btn btn-success"
+								>Return to Dashboard to Publish</a
+							>
+						</div>
+						<% } %>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<script>
+			// Auto-save draft functionality (optional enhancement)
+			document.getElementById("title").addEventListener("input", function () {
+				// You could implement auto-save here
+			});
+
+			// Form validation
+			document
+				.querySelector(".event-form")
+				.addEventListener("submit", function (e) {
+					const title = document.getElementById("title").value.trim();
+					const date = document.getElementById("date").value;
+
+					if (!title) {
+						alert("Please enter an event title.");
+						e.preventDefault();
+						return;
+					}
+
+					if (!date) {
+						alert("Please select an event date and time.");
+						e.preventDefault();
+						return;
+					}
+
+					// Check if date is in the future
+					const eventDate = new Date(date);
+					const now = new Date();
+
+					if (eventDate <= now) {
+						if (
+							!confirm(
+								"The event date is in the past or very soon. Are you sure you want to continue?"
+							)
+						) {
+							e.preventDefault();
+							return;
+						}
+					}
+				});
+		</script>
+	</body>
+</html>

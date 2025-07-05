@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="/main.css" />
+		<title>Booking Confirmed - <%= event.title %></title>
+	</head>
+	<body>
+		<div class="container">
+			<header class="header">
+				<div class="header-content">
+					<h1>Booking Confirmation</h1>
+					<div class="site-info">
+						<h2 class="site-name"><%= siteInfo.name %></h2>
+					</div>
+				</div>
+				<div class="header-actions">
+					<a href="/attendees" class="btn btn-primary">View More Events</a>
+				</div>
+			</header>
+
+			<main class="booking-success-container">
+				<div class="success-card">
+					<div class="success-icon">✅</div>
+
+					<h1>Booking Confirmed!</h1>
+					<p class="success-message">
+						Your tickets have been successfully booked. We look forward to
+						seeing you at the event!
+					</p>
+
+					<div class="booking-details">
+						<h2>Booking Details</h2>
+
+						<div class="detail-section">
+							<h3>Event Information</h3>
+							<div class="detail-item">
+								<strong>Event:</strong> <%= event.title %>
+							</div>
+							<div class="detail-item">
+								<strong>Date:</strong>
+								<%= new Date(event.date).toLocaleDateString('en-US', { weekday:
+								'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+							</div>
+							<div class="detail-item">
+								<strong>Time:</strong>
+								<%= new Date(event.date).toLocaleTimeString('en-US', { hour:
+								'2-digit', minute: '2-digit' }) %>
+							</div>
+						</div>
+
+						<div class="detail-section">
+							<h3>Attendee Information</h3>
+							<div class="detail-item">
+								<strong>Name:</strong> <%= booking.attendee_name %>
+							</div>
+							<div class="detail-item">
+								<strong>Booking Date:</strong>
+								<%= new Date(booking.bookedAt).toLocaleDateString() %> at <%=
+								new Date(booking.bookedAt).toLocaleTimeString() %>
+							</div>
+						</div>
+
+						<div class="detail-section">
+							<h3>Ticket Summary</h3>
+							<div class="ticket-summary">
+								<% if (booking.general_tickets > 0) { %>
+								<div class="ticket-line">
+									<span
+										><%= booking.general_tickets %> × General Admission</span
+									>
+									<span>$<%= (booking.general_tickets * 25).toFixed(2) %></span>
+								</div>
+								<% } %> <% if (booking.vip_tickets > 0) { %>
+								<div class="ticket-line">
+									<span><%= booking.vip_tickets %> × VIP Access</span>
+									<span>$<%= (booking.vip_tickets * 75).toFixed(2) %></span>
+								</div>
+								<% } %>
+								<div class="ticket-total">
+									<span><strong>Total:</strong></span>
+									<span
+										><strong
+											>$<%= ((booking.general_tickets * 25) +
+											(booking.vip_tickets * 75)).toFixed(2) %></strong
+										></span
+									>
+								</div>
+							</div>
+						</div>
+
+						<% if (booking.notes && booking.notes.trim() !== '') { %>
+						<div class="detail-section">
+							<h3>Special Requests</h3>
+							<div class="detail-item">
+								<p class="booking-notes"><%= booking.notes %></p>
+							</div>
+						</div>
+						<% } %>
+					</div>
+
+					<div class="important-info">
+						<h3>Important Information</h3>
+						<ul>
+							<li>Please arrive 15 minutes before the event start time</li>
+							<li>Bring a valid ID for entry verification</li>
+							<li>Your booking name must match your ID</li>
+							<li>Tickets are non-refundable but may be transferable</li>
+							<li>For any questions, contact our support team</li>
+						</ul>
+					</div>
+
+					<div class="next-steps">
+						<h3>What's Next?</h3>
+						<div class="steps-grid">
+							<div class="step-card">
+								<div class="step-number">1</div>
+								<h4>Save This Page</h4>
+								<p>
+									Bookmark this confirmation or take a screenshot for your
+									records
+								</p>
+							</div>
+							<div class="step-card">
+								<div class="step-number">2</div>
+								<h4>Prepare for Event</h4>
+								<p>Check the event description for any specific requirements</p>
+							</div>
+							<div class="step-card">
+								<div class="step-number">3</div>
+								<h4>Attend & Enjoy</h4>
+								<p>Arrive on time and enjoy your event experience!</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="action-buttons">
+						<a href="/attendees" class="btn btn-primary btn-large"
+							>Browse More Events</a
+						>
+						<button
+							onclick="window.print()"
+							class="btn btn-secondary btn-large"
+						>
+							Print Confirmation
+						</button>
+					</div>
+				</div>
+			</main>
+		</div>
+
+		<script>
+			// Add print styles
+			const printStyles = `
+            @media print {
+                .header, .action-buttons { display: none !important; }
+                .container { padding: 20px !important; }
+                .success-card { 
+                    box-shadow: none !important; 
+                    border: 2px solid #ddd !important;
+                }
+                body { background: white !important; }
+            }
+        `;
+
+			const styleSheet = document.createElement("style");
+			styleSheet.textContent = printStyles;
+			document.head.appendChild(styleSheet);
+
+			// Auto-focus on main content for accessibility
+			document.querySelector(".success-card").focus();
+		</script>
+	</body>
+</html>

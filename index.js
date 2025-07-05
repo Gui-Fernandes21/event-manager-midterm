@@ -1,12 +1,14 @@
 /**
 * index.js
-* This is your main app entry point
+* This is the main app entry point
 */
 
 // Set up express, bodyparser and EJS
 const express = require('express');
 const session = require("express-session");
 var bodyParser = require("body-parser");
+
+const mainRoutes = require("./routes/main");
 
 // Import authentication middleware
 const { loadUser, getSessionConfig } = require("./middlewares/auth");
@@ -38,18 +40,27 @@ global.db = new sqlite3.Database('./database.db',function(err){
 // Load user information for all requests (makes user data available in views)
 app.use(loadUser);
 
-// Handle requests to the home page 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
+app.use('/', mainRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+	console.error(err.stack);
+	res.status(500).send("Something broke!");
 });
-
-// Add all the route handlers in usersRoutes to the app under the path /users
-const usersRoutes = require('./routes/users');
-app.use('/users', usersRoutes);
-
 
 // Make the web application listen for HTTP requests
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+	console.log(`Example app listening on port ${port}`);
+	console.log(`Visit http://localhost:${port} to get started`);
+});
 
+
+/**
+ * OPTIONAL: Update your database schema to support admin users
+ *
+ * Add this to your db_schema.sql if you want admin functionality:
+ *
+ * ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0;
+ *
+ * Then you can use the requireAdmin middleware for admin-only routes.
+ */

@@ -12,52 +12,24 @@ const express = require("express");
 const router = express.Router();
 const { requireAuth } = require('../middlewares/auth');
 
+const userControllers = require("../controllers/user");
+
 // Apply authentication middleware to all user routes
 router.use(requireAuth);
 
 /**
  * @desc Display all the users
  */
-router.get("/list-users", (req, res, next) => {
-	// Define the query
-	query = "SELECT * FROM users";
-
-	// Execute the query and render the page with the results
-	global.db.all(query, function (err, rows) {
-		if (err) {
-			next(err); //send the error on to the error handler
-		} else {
-			res.render("list-users.ejs", { users: rows }); // render page with users data
-		}
-	});
-});
+router.get("/list-users", userControllers.listUsers);
 
 /**
  * @desc Displays a page with a form for creating a user record
  */
-router.get("/add-user", (req, res) => {
-	res.render("add-user.ejs");
-});
+router.get("/add-user", (req, res) => res.render("add-user.ejs"));
 
 /**
  * @desc Add a new user to the database based on data from the submitted form
  */
-router.post("/add-user", (req, res, next) => {
-	// Define the query
-	query = "INSERT INTO users (user_name) VALUES( ? );";
-	query_parameters = [req.body.user_name];
+router.post("/add-user", userControllers.addUserPost);
 
-	// Execute the query and send a confirmation message
-	global.db.run(query, query_parameters, function (err) {
-		if (err) {
-			next(err); //send the error on to the error handler
-		} else {
-			// res.send(`New data inserted @ id ${this.lastID}!`);
-			// next();
-			res.redirect("/users/list-users"); // redirect to user list after successful creation
-		}
-	});
-});
-
-// Export the router object so index.js can access it
 module.exports = router;

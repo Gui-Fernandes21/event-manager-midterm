@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="/main.css" />
+		<title>Site Settings - EventFlow Manager</title>
+	</head>
+	<body>
+		<div class="container">
+			<header class="header">
+				<h1>Site Settings</h1>
+				<div class="header-actions">
+					<a href="/organizer" class="btn btn-secondary">Back to Dashboard</a>
+					<% if (typeof user !== 'undefined' && user) { %>
+					<div class="nav-user-info">
+						<span class="nav-user-name"><%= user.user_name %></span>
+					</div>
+					<a href="/auth/logout" class="btn btn-logout">Logout</a>
+					<% } %>
+				</div>
+			</header>
+
+			<div class="settings-container">
+				<form action="/organizer/settings" method="post" class="settings-form">
+					<div class="form-section">
+						<h2>Event Manager Information</h2>
+
+						<div class="form-group">
+							<label for="site_name">Event Manager Name</label>
+							<input
+								type="text"
+								id="site_name"
+								name="site_name"
+								value="<%= siteInfo.name %>"
+								placeholder="Your organization or event manager name"
+							/>
+							<small class="form-help"
+								>This name will appear on all public pages</small
+							>
+						</div>
+
+						<div class="form-group">
+							<label for="site_description">Description</label>
+							<textarea
+								id="site_description"
+								name="site_description"
+								rows="4"
+								placeholder="Brief description of your events or organization"
+							>
+<%= siteInfo.description %></textarea
+							>
+							<small class="form-help"
+								>Describe what kind of events you organize</small
+							>
+						</div>
+					</div>
+
+					<div class="form-section">
+						<h2>Event Defaults</h2>
+
+						<div class="form-row">
+							<div class="form-group">
+								<label for="default_general_tickets"
+									>Default General Tickets</label
+								>
+								<input
+									type="number"
+									id="default_general_tickets"
+									name="default_general_tickets"
+									value="50"
+									min="0"
+								/>
+							</div>
+
+							<div class="form-group">
+								<label for="default_vip_tickets">Default VIP Tickets</label>
+								<input
+									type="number"
+									id="default_vip_tickets"
+									name="default_vip_tickets"
+									value="10"
+									min="0"
+								/>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-section">
+						<h2>Contact Information</h2>
+
+						<div class="form-group">
+							<label for="contact_email">Contact Email</label>
+							<input
+								type="email"
+								id="contact_email"
+								name="contact_email"
+								placeholder="contact@yourorganization.com"
+							/>
+							<small class="form-help"
+								>This email will be shown to attendees for support</small
+							>
+						</div>
+
+						<div class="form-group">
+							<label for="contact_phone">Contact Phone</label>
+							<input
+								type="tel"
+								id="contact_phone"
+								name="contact_phone"
+								placeholder="+1 (555) 123-4567"
+							/>
+						</div>
+					</div>
+
+					<div class="form-section">
+						<h2>Event Page Settings</h2>
+
+						<div class="form-group">
+							<label for="booking_instructions">Booking Instructions</label>
+							<textarea
+								id="booking_instructions"
+								name="booking_instructions"
+								rows="3"
+								placeholder="Instructions for attendees on how to book events..."
+							>
+Please review the event details carefully before booking. Bring a valid ID to the event.</textarea
+							>
+							<small class="form-help"
+								>These instructions will appear on all event booking
+								pages</small
+							>
+						</div>
+
+						<div class="form-group">
+							<input
+								type="checkbox"
+								id="require_booking_notes"
+								name="require_booking_notes"
+							/>
+							<label for="require_booking_notes"
+								>Require booking notes from attendees</label
+							>
+						</div>
+
+						<div class="form-group">
+							<input
+								type="checkbox"
+								id="show_remaining_tickets"
+								name="show_remaining_tickets"
+								checked
+							/>
+							<label for="show_remaining_tickets"
+								>Show remaining ticket count to attendees</label
+							>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button type="submit" class="btn btn-primary btn-large">
+							Save Settings
+						</button>
+						<a href="/organizer" class="btn btn-outline btn-large">Cancel</a>
+					</div>
+				</form>
+
+				<div class="settings-info">
+					<h3>Current Statistics</h3>
+					<div class="stats-grid">
+						<div class="stat-card">
+							<h4>Total Events</h4>
+							<p class="stat-number">--</p>
+						</div>
+						<div class="stat-card">
+							<h4>Published Events</h4>
+							<p class="stat-number">--</p>
+						</div>
+						<div class="stat-card">
+							<h4>Draft Events</h4>
+							<p class="stat-number">--</p>
+						</div>
+						<div class="stat-card">
+							<h4>Total Bookings</h4>
+							<p class="stat-number">--</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			// Load statistics (you could implement this with an API call)
+			document.addEventListener("DOMContentLoaded", function () {
+				// This would typically fetch from an API endpoint
+				// For now, we'll leave the placeholder values
+			});
+
+			// Form validation
+			document
+				.querySelector(".settings-form")
+				.addEventListener("submit", function (e) {
+					const siteName = document.getElementById("site_name").value.trim();
+
+					if (!siteName) {
+						alert("Please enter an event manager name.");
+						e.preventDefault();
+						return;
+					}
+				});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="/main.css" />
+		<title>Attendee Event Page - <%= title %></title>
+	</head>
+	<body>
+		<div class="container">
+			<header class="header">
+				<div class="header-content">
+					<h1>Attendee Event Page</h1>
+					<div class="site-info">
+						<h2 class="site-name"><%= siteInfo.name %></h2>
+					</div>
+				</div>
+				<div class="header-actions">
+					<a href="/attendees" class="btn btn-secondary">Back to Events</a>
+					<% if (typeof user !== 'undefined' && user) { %>
+					<div class="nav-user-info">
+						<span class="nav-user-name"><%= user.user_name %></span>
+					</div>
+					<a href="/auth/logout" class="btn btn-logout">Logout</a>
+					<% } %>
+				</div>
+			</header>
+
+			<% if (typeof error !== 'undefined' && error) { %>
+			<div class="alert alert-error"><%= error %></div>
+			<% } %>
+
+			<main class="event-details-container">
+				<div class="event-details-card">
+					<div class="event-header">
+						<h1 class="event-title"><%= event.title %></h1>
+						<div class="event-status-badge">
+							<span class="status-published">Available for Booking</span>
+						</div>
+					</div>
+
+					<div class="event-info-grid">
+						<div class="event-info-section">
+							<h3>Event Information</h3>
+
+							<div class="info-item">
+								<strong>Date & Time:</strong>
+								<span class="event-datetime">
+									<%= formattedEventDate %> at <%= formattedEventTime %>
+								</span>
+							</div>
+
+							<div class="info-item">
+								<strong>Description:</strong>
+								<p class="event-description">
+									<%= event.description || 'No description provided for this event.' %>
+								</p>
+							</div>
+
+							<div class="info-item">
+								<strong>Published:</strong>
+								<span
+									><%= formattedPublishedAt %></span
+								>
+							</div>
+						</div>
+
+						<div class="ticket-info-section">
+							<h3>Ticket Information</h3>
+
+							<div class="ticket-types">
+								<% if (event.tickets_general > 0) { %>
+								<div class="ticket-type-card">
+									<h4>General Admission</h4>
+									<div class="ticket-details">
+										<div class="ticket-price">$25.00</div>
+										<div class="ticket-remaining">
+											<%= remainingTickets.general %> of <%= event.tickets_general %> 
+                      remaining
+										</div>
+									</div>
+								</div>
+								<% } %> <% if (event.tickets_vip > 0) { %>
+								<div class="ticket-type-card">
+									<h4>VIP Access</h4>
+									<div class="ticket-details">
+										<div class="ticket-price">$75.00</div>
+										<div class="ticket-remaining">
+											<%= remainingTickets.vip %> of <%= event.tickets_vip %>
+											remaining
+										</div>
+									</div>
+								</div>
+								<% } %>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="booking-form-card">
+					<h2>Book Your Tickets</h2>
+
+					<form
+						action="/attendees/event/<%= event.event_id %>/book"
+						method="post"
+						class="booking-form"
+						id="bookingForm"
+					>
+						<div class="form-section">
+							<h3>Your Information</h3>
+							<div class="form-group">
+								<label for="attendee_name">Full Name *</label>
+								<input
+									type="text"
+									id="attendee_name"
+									name="attendee_name"
+									placeholder="Enter your full name"
+									required
+								/>
+							</div>
+						</div>
+
+						<div class="form-section">
+							<h3>Select Tickets</h3>
+
+							<% if (event.tickets_general > 0 && remainingTickets.general > 0) { %>
+							<div class="ticket-selection">
+								<label for="general_tickets"
+									>General Admission ($25.00 each)</label
+								>
+								<div class="ticket-input-group">
+									<input
+										type="number"
+										id="general_tickets"
+										name="general_tickets"
+										min="0"
+										max="<%= remainingTickets.general %>"
+										value="0"
+										class="ticket-quantity"
+									/>
+									<span class="ticket-max"
+										>Max: <%= remainingTickets.general %></span
+									>
+								</div>
+							</div>
+							<% } else if (event.tickets_general > 0) { %>
+							<div class="ticket-selection sold-out">
+								<label>General Admission - SOLD OUT</label>
+								<input type="hidden" name="general_tickets" value="0" />
+							</div>
+							<% } %> 
+              <% if (event.tickets_vip > 0 && remainingTickets.vip > 0) { %>
+							<div class="ticket-selection">
+								<label for="vip_tickets">VIP Access ($75.00 each)</label>
+								<div class="ticket-input-group">
+									<input
+										type="number"
+										id="vip_tickets"
+										name="vip_tickets"
+										min="0"
+										max="<%= remainingTickets.vip %>"
+										value="0"
+										class="ticket-quantity"
+									/>
+									<span class="ticket-max"
+										>Max: <%= remainingTickets.vip %></span
+									>
+								</div>
+							</div>
+							<% } else if (event.tickets_vip > 0) { %>
+							<div class="ticket-selection sold-out">
+								<label>VIP Access - SOLD OUT</label>
+								<input type="hidden" name="vip_tickets" value="0" />
+							</div>
+							<% } %> 
+              <% if (remainingTickets.general === 0 && remainingTickets.vip === 0) { %>
+							<div class="event-sold-out">
+								<h3>Event Sold Out</h3>
+								<p>Sorry, all tickets for this event have been booked.</p>
+							</div>
+							<% } %>
+						</div>
+
+						<% if (remainingTickets.general > 0 || remainingTickets.vip > 0) { %>
+						<div class="form-section">
+							<h3>Additional Information</h3>
+							<div class="form-group">
+								<label for="notes">Special Requests or Notes (Optional)</label>
+								<textarea
+									id="notes"
+									name="notes"
+									rows="3"
+									placeholder="Any special dietary requirements, accessibility needs, or other notes..."
+								></textarea>
+							</div>
+						</div>
+
+						<div class="booking-summary">
+							<h3>Booking Summary</h3>
+							<div id="summaryContent">
+								<p>Select tickets to see your booking summary</p>
+							</div>
+							<div class="total-cost">
+								Total: $<span id="totalCost">0.00</span>
+							</div>
+						</div>
+
+						<div class="form-actions">
+							<button
+								type="submit"
+								class="btn btn-primary btn-large"
+								id="bookButton"
+							>
+								Book Tickets
+							</button>
+							<a href="/attendees" class="btn btn-outline btn-large">
+								Back to Events
+							</a>
+						</div>
+						<% } else { %>
+						<div class="form-actions">
+							<a href="/attendees" class="btn btn-primary btn-large">
+								Back to Events
+							</a>
+						</div>
+						<% } %>
+					</form>
+				</div>
+			</main>
+		</div>
+
+		<script>
+			// Ticket calculation and validation
+			const generalInput = document.getElementById("general_tickets");
+			const vipInput = document.getElementById("vip_tickets");
+			const summaryContent = document.getElementById("summaryContent");
+			const totalCostElement = document.getElementById("totalCost");
+			const bookButton = document.getElementById("bookButton");
+
+			const GENERAL_PRICE = 25.0;
+			const VIP_PRICE = 75.0;
+
+			function updateBookingSummary() {
+				const generalTickets = parseInt(generalInput?.value || 0);
+				const vipTickets = parseInt(vipInput?.value || 0);
+
+				let summary = [];
+				let totalCost = 0;
+
+				if (generalTickets > 0) {
+					summary.push(
+						`${generalTickets} General Admission ticket${
+							generalTickets > 1 ? "s" : ""
+						} × $${GENERAL_PRICE.toFixed(2)}`
+					);
+					totalCost += generalTickets * GENERAL_PRICE;
+				}
+
+				if (vipTickets > 0) {
+					summary.push(
+						`${vipTickets} VIP Access ticket${
+							vipTickets > 1 ? "s" : ""
+						} × $${VIP_PRICE.toFixed(2)}`
+					);
+					totalCost += vipTickets * VIP_PRICE;
+				}
+
+				if (summary.length > 0) {
+					summaryContent.innerHTML = summary.join("<br>");
+					bookButton.disabled = false;
+				} else {
+					summaryContent.innerHTML =
+						"<p>Select tickets to see your booking summary</p>";
+					bookButton.disabled = true;
+				}
+
+				totalCostElement.textContent = totalCost.toFixed(2);
+			}
+
+			// Add event listeners for ticket inputs
+			if (generalInput) {
+				generalInput.addEventListener("input", updateBookingSummary);
+			}
+			if (vipInput) {
+				vipInput.addEventListener("input", updateBookingSummary);
+			}
+
+			// Form validation
+			document
+				.getElementById("bookingForm")
+				?.addEventListener("submit", function (e) {
+					const attendeeName = document
+						.getElementById("attendee_name")
+						.value.trim();
+					const generalTickets = parseInt(generalInput?.value || 0);
+					const vipTickets = parseInt(vipInput?.value || 0);
+
+					if (!attendeeName) {
+						alert("Please enter your full name.");
+						e.preventDefault();
+						return;
+					}
+
+					if (generalTickets <= 0 && vipTickets <= 0) {
+						alert("Please select at least one ticket.");
+						e.preventDefault();
+						return;
+					}
+
+					// Confirm booking
+					const totalTickets = generalTickets + vipTickets;
+					const totalCost =
+						generalTickets * GENERAL_PRICE + vipTickets * VIP_PRICE;
+
+					if (
+						!confirm(
+							`Confirm booking for ${totalTickets} ticket(s) for $${totalCost.toFixed(
+								2
+							)}?`
+						)
+					) {
+						e.preventDefault();
+						return;
+					}
+
+					// Show loading state
+					bookButton.innerHTML = "Processing...";
+					bookButton.disabled = true;
+				});
+
+			// Initialize summary
+			updateBookingSummary();
+		</script>
+	</body>
+</html>

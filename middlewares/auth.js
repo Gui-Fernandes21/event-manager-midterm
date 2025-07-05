@@ -10,7 +10,6 @@
  * @param {Object} res - Express response object
  * @param {Function} next - Express next function
  */
-
 const requireAuth = (req, res, next) => {
 	// Check if user session exists and has a valid user_id
 	if (req.session && req.session.user_id) {
@@ -156,6 +155,34 @@ const getSessionConfig = () => {
 	};
 };
 
+const requireRole = (role) => {
+	return (req, res, next) => {
+		if (!req.session || !req.session.user_id) {
+			req.session.returnTo = req.originalUrl;
+			return res.redirect("/auth/login");
+		}
+
+		const query =
+			"SELECT user_id, user_name, role FROM users WHERE user_id = ?";
+
+		global.db.get(query, [req.session.user_id], (err, user) => {
+			if (err) {
+				console.error("Error checking user role:", err);
+				return res.status(500).send("Server error");
+			}
+
+			if (user && user.role === role) {
+				return next();
+			} else {
+				return res.status(403).render("error", {
+					message: "Access Denied",
+					error: `You need ${role} privileges to access this resource.`,
+				});
+			}
+		});
+	};
+};
+
 module.exports = {
 	requireAuth,
 	redirectIfAuthenticated,
@@ -164,4 +191,6 @@ module.exports = {
 	createUserSession,
 	destroyUserSession,
 	getSessionConfig,
+	requireRole,
 };
+
