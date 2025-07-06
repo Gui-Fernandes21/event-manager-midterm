@@ -11,15 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
   user_name TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,             -- Hashed password
-  role TEXT CHECK(role IN ('organizer', 'attendee')) NOT NULL,
+  role TEXT CHECK(role IN ('organizer', 'attendee', 'admin')) NOT NULL,
   createdAt TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS email_accounts (
-    email_account_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email_address TEXT NOT NULL,
-    user_id  INT, --the user that the email account belongs to
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE IF NOT EXISTS events (
@@ -65,14 +58,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
 
 -- Set up three users
 -- INSERT INTO users ('user_name', 'email', 'password', 'role', 'createdAt') VALUES ('Gui Fernandes', 'gui.fernandes@example.com', 'hashed_password', 'organizer', '2023-01-01T00:00:00Z');
-INSERT INTO users ('user_name', 'email', 'password', 'role', 'createdAt') VALUES ('sushi', 'sushi@example.com', 'hashed_password', 'attendee', '2023-01-01T00:00:00Z');
--- INSERT INTO users ('user_name', 'email', 'password', 'role', 'createdAt') VALUES ('Dianne Dean', 'dianne.dean@example.com', 'hashed_password', 'attendee', '2023-01-01T00:00:00Z');
--- INSERT INTO users ('user_name', 'email', 'password', 'role', 'createdAt') VALUES ('Harry Hilbert', 'harry.hilbert@example.com', 'hashed_password', 'attendee', '2023-01-01T00:00:00Z');
-
--- Give Simon two email addresses and Diane one, but Harry has none
-INSERT INTO email_accounts ('email_address', 'user_id') VALUES ('simon@gmail.com', 1); 
--- INSERT INTO email_accounts ('email_address', 'user_id') VALUES ('simon@hotmail.com', 1); 
--- INSERT INTO email_accounts ('email_address', 'user_id') VALUES ('dianne@yahoo.co.uk', 2); 
+-- INSERT INTO users ('user_name', 'email', 'password', 'role', 'createdAt') VALUES ('sushi', 'sushi@example.com', 'hashed_password', 'attendee', '2023-01-01T00:00:00Z');
 
 -- Insert default site settings
 INSERT INTO site_settings ('site_name', 'site_description', 'default_general_tickets', 'default_vip_tickets', 'contact_email', 'contact_phone', 'booking_instructions', 'require_booking_notes', 'show_remaining_tickets', 'updated_at') 

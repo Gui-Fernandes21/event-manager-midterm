@@ -117,6 +117,7 @@ exports.login = (req, res, next) => {
 			}
 			// Passwords match, create session
 			createUserSession(req, user);
+			
 			res.redirect("/");
 		});
 	});

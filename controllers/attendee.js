@@ -215,9 +215,6 @@ exports.postEventBooking = (req, res, next) => {
 	const eventId = req.params.id;
 	const { attendee_name, general_tickets, vip_tickets, notes } = req.body;
 
-  console.log(req.body);
-
-
 	// Get site settings first to check requirements
 	const settingsQuery =
 		"SELECT require_booking_notes FROM site_settings ORDER BY id DESC LIMIT 1";

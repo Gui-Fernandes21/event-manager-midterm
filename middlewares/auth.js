@@ -4,11 +4,9 @@
  * This middleware provides session-based authentication functionality
  */
 
+
 /**
  * Middleware to check if user is authenticated
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next function
  */
 const requireAuth = (req, res, next) => {
 	// Check if user session exists and has a valid user_id
@@ -28,14 +26,11 @@ const requireAuth = (req, res, next) => {
 /**
  * Middleware to check if user is already authenticated (for login/register pages)
  * Redirects to dashboard if already logged in
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next function
  */
 const redirectIfAuthenticated = (req, res, next) => {
 	if (req.session && req.session.user_id) {
 		// User is already authenticated, redirect to dashboard or users list
-		return res.redirect("/users/list-users");
+		return res.redirect("/");
 	} else {
 		// User is not authenticated, proceed to login/register page
 		return next();
@@ -45,9 +40,6 @@ const redirectIfAuthenticated = (req, res, next) => {
 /**
  * Middleware to make user information available in all views
  * Adds user data to res.locals so it can be accessed in EJS templates
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next function
  */
 const loadUser = (req, res, next) => {
 	if (req.session && req.session.user_id) {
@@ -61,7 +53,8 @@ const loadUser = (req, res, next) => {
 				req.session.destroy();
 				res.locals.user = null;
 			} else if (user) {
-				// User found, make available to views
+				// User found, make available to the application
+				res.locals.user_id = user.user_id;
 				res.locals.user = user;
 				res.locals.isAuthenticated = true;
 			} else {
@@ -83,9 +76,6 @@ const loadUser = (req, res, next) => {
 /**
  * Middleware to check if user has admin privileges
  * Requires user to be authenticated first
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next function
  */
 const requireAdmin = (req, res, next) => {
 	// First check if user is authenticated
@@ -119,8 +109,6 @@ const requireAdmin = (req, res, next) => {
 
 /**
  * Helper function to create user session
- * @param {Object} req - Express request object
- * @param {Object} user - User object from database
  */
 const createUserSession = (req, user) => {
 	req.session.user_id = user.user_id;
@@ -130,8 +118,6 @@ const createUserSession = (req, user) => {
 
 /**
  * Helper function to destroy user session
- * @param {Object} req - Express request object
- * @param {Function} callback - Callback function
  */
 const destroyUserSession = (req, callback) => {
 	req.session.destroy(callback);
@@ -144,17 +130,21 @@ const destroyUserSession = (req, callback) => {
 const getSessionConfig = () => {
 	return {
 		secret:
-			process.env.SESSION_SECRET || "your-secret-key-change-this-in-production",
+			process.env.SESSION_SECRET || "super-secret-key",
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
-			secure: false, // Set to true if using HTTPS
+			secure: false, 
 			httpOnly: true,
 			maxAge: 24 * 60 * 60 * 1000, // 24 hours
 		},
 	};
 };
 
+/** * Middleware to check if user has a specific role
+ * @param {string} role - The required role (e.g., 'admin', 'organizer', 'attendee', etc.)
+ * @returns {Function} Middleware function
+ */
 const requireRole = (role) => {
 	return (req, res, next) => {
 		if (!req.session || !req.session.user_id) {

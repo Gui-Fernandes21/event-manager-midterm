@@ -223,7 +223,7 @@ exports.getShareLink = (req, res, next) => {
 		} else {
 			const sharingLink = `${req.protocol}://${req.get(
 				"host"
-			)}/attendee/event/${eventId}`;
+			)}/attendees/event/${eventId}`;
 			res.json({
 				eventId: event.event_id,
 				title: event.title,
