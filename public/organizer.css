@@ -1,0 +1,283 @@
+
+.header-content {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.header-actions {
+	display: flex;
+  flex-direction: column;
+	align-items: center;
+	gap: 15px;
+	flex-wrap: wrap;
+}
+
+.header-actions > .auth,
+.header-actions > .actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+.site-info {
+	margin-top: 10px;
+}
+
+.site-name {
+	color: white;
+	font-size: 1.4rem;
+	font-weight: 400;
+	margin: 0;
+}
+
+.site-description {
+	color: rgba(255, 255, 255, 0.8);
+	font-size: 1rem;
+	margin: 5px 0 0 0;
+}
+
+/* Events sections */
+.events-section {
+	margin-bottom: 40px;
+}
+
+.section-title {
+	color: white;
+	font-size: 1.8rem;
+	font-weight: 300;
+	margin-bottom: 20px;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.events-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+	gap: 25px;
+}
+
+/* Event cards */
+.event-card {
+	background: white;
+	border-radius: 15px;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	transition: all 0.3s ease;
+	border-left: 5px solid #667eea;
+}
+
+.event-card.draft {
+	border-left-color: #f39c12;
+	opacity: 0.9;
+}
+
+.event-card.published {
+	border-left-color: #27ae60;
+}
+
+.event-card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.event-card-header {
+	padding: 20px;
+	background: #f8f9fa;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.event-title {
+	font-size: 1.3rem;
+	font-weight: 600;
+	color: #2c3e50;
+	margin: 0;
+	line-height: 1.3;
+}
+
+.event-status {
+	padding: 4px 12px;
+	border-radius: 15px;
+	font-size: 0.8rem;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.status-draft {
+	background: #fff3cd;
+	color: #856404;
+}
+
+.status-published {
+	background: #d4edda;
+	color: #155724;
+}
+
+.event-card-body {
+	padding: 20px;
+}
+
+.event-description {
+	color: #666;
+	font-size: 0.95rem;
+	line-height: 1.5;
+	margin-bottom: 15px;
+}
+
+.event-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	font-size: 0.9rem;
+}
+
+.event-meta div {
+	display: flex;
+	align-items: center;
+}
+
+.event-date,
+.event-created,
+.event-published {
+	color: #555;
+}
+
+.ticket-info {
+	display: flex;
+	gap: 15px;
+	margin-top: 5px;
+}
+
+.ticket-count {
+	background: #e9ecef;
+	padding: 4px 8px;
+	border-radius: 8px;
+	font-size: 0.8rem;
+	font-weight: 500;
+}
+
+.event-card-footer {
+	padding: 15px 20px;
+	background: #f8f9fa;
+	display: flex;
+  justify-content: flex-end;
+	gap: 10px;
+	flex-wrap: wrap;
+	border-top: 1px solid #e9ecef;
+}
+
+/* No events state */
+.no-events {
+	text-align: center;
+	padding: 40px 20px;
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 15px;
+	color: white;
+}
+
+.no-events p {
+	font-size: 1.1rem;
+	opacity: 0.8;
+}
+
+/* Edit event form styles */
+.edit-event-container {
+	background: white;
+	border-radius: 15px;
+	padding: 30px;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.event-form {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.form-section {
+	margin-bottom: 30px;
+	padding-bottom: 25px;
+	border-bottom: 1px solid #e9ecef;
+}
+
+.form-section:last-of-type {
+	border-bottom: none;
+	margin-bottom: 20px;
+}
+
+.form-section h2 {
+	color: #2c3e50;
+	font-size: 1.4rem;
+	font-weight: 500;
+	margin-bottom: 20px;
+}
+
+.form-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+
+.form-group textarea {
+	resize: vertical;
+	min-height: 100px;
+}
+
+.form-help {
+	color: #6c757d;
+	font-size: 0.85rem;
+	margin-top: 5px;
+	display: block;
+}
+
+.status-info {
+	background: #f8f9fa;
+	padding: 15px;
+	border-radius: 8px;
+	border-left: 4px solid #007bff;
+}
+
+.status-badge {
+	padding: 4px 12px;
+	border-radius: 15px;
+	font-size: 0.8rem;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.status-note {
+	margin-top: 10px;
+	color: #666;
+	font-style: italic;
+}
+
+.form-actions {
+	display: flex;
+	gap: 15px;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-top: 30px;
+}
+
+.publish-section {
+	margin-left: auto;
+	text-align: right;
+}
+
+.publish-section p {
+	margin-bottom: 10px;
+	color: #666;
+	font-size: 0.9rem;
+}
+
+.event-action-form {
+  margin: 0;
+  background: none;
+  padding: 0;
+  box-shadow: none;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

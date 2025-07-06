@@ -8,6 +8,7 @@ exports.getOrganizerPage = (req, res, next) => {
 		"SELECT * FROM events WHERE status = 'published' ORDER BY date ASC";
 	const draftQuery =
 		"SELECT * FROM events WHERE status = 'draft' ORDER BY createdAt DESC";
+	const settingsQuery = "SELECT * FROM site_settings ORDER BY id DESC LIMIT 1";
 
 	// Execute both queries
 	global.db.all(publishedQuery, (err, publishedEvents) => {
@@ -22,15 +23,32 @@ exports.getOrganizerPage = (req, res, next) => {
 				return;
 			}
 
-			// Render the organizer home page with both sets of events
-			res.render("organizer/home.ejs", {
-				title: "Organizer Dashboard",
-				publishedEvents: publishedEvents,
-				draftEvents: draftEvents,
-				siteInfo: {
-					name: "EventFlow Manager",
-					description: "Professional event management for all your needs",
-				},
+			// Get site settings
+			global.db.get(settingsQuery, (err, settings) => {
+				if (err) {
+					next(err);
+					return;
+				}
+
+				// Use default settings if none exist
+				if (!settings) {
+					settings = {
+						site_name: "EventFlow Manager",
+						site_description:
+							"Professional event management for all your needs",
+					};
+				}
+
+				// Render the organizer home page with both sets of events
+				res.render("organizer/home.ejs", {
+					title: "Organizer Dashboard",
+					publishedEvents: publishedEvents,
+					draftEvents: draftEvents,
+					siteInfo: {
+						name: settings.site_name,
+						description: settings.site_description,
+					},
+				});
 			});
 		});
 	});
@@ -45,23 +63,40 @@ exports.createEvent = (req, res, next) => {
 	const defaultDate = new Date();
 	defaultDate.setDate(defaultDate.getDate() + 7); // Default to 1 week from now
 
-	const query = `INSERT INTO events (title, description, date, createdAt, status, tickets_general, tickets_vip) 
-                   VALUES (?, ?, ?, ?, 'draft', 0, 0)`;
+	// Get settings to use default ticket values
+	const settingsQuery =
+		"SELECT default_general_tickets, default_vip_tickets FROM site_settings ORDER BY id DESC LIMIT 1";
 
-	const params = [
-		"New Event",
-		"Event description",
-		defaultDate.toISOString(),
-		now,
-	];
-
-	global.db.run(query, params, function (err) {
+	global.db.get(settingsQuery, (err, settings) => {
 		if (err) {
 			next(err);
-		} else {
-			// Redirect to edit page for the newly created event
-			res.redirect(`/organizer/edit-event/${this.lastID}`);
+			return;
 		}
+
+		// Use default values if no settings exist
+		const defaultGeneral = settings ? settings.default_general_tickets : 50;
+		const defaultVip = settings ? settings.default_vip_tickets : 10;
+
+		const query = `INSERT INTO events (title, description, date, createdAt, status, tickets_general, tickets_vip) 
+		               VALUES (?, ?, ?, ?, 'draft', ?, ?)`;
+
+		const params = [
+			"New Event",
+			"Event description",
+			defaultDate.toISOString(),
+			now,
+			defaultGeneral,
+			defaultVip,
+		];
+
+		global.db.run(query, params, function (err) {
+			if (err) {
+				next(err);
+			} else {
+				// Redirect to edit page for the newly created event
+				res.redirect(`/organizer/edit-event/${this.lastID}`);
+			}
+		});
 	});
 };
 
@@ -145,7 +180,7 @@ exports.publishEvent = (req, res, next) => {
 /**
  * @desc Delete Event
  * Removes event from database
- */ 
+ */
 exports.deleteEvent = (req, res, next) => {
 	const eventId = req.params.id;
 
@@ -198,17 +233,153 @@ exports.getShareLink = (req, res, next) => {
 	});
 };
 
-/** 
+/**
  * @desc Get Site Settings
  * Renders the settings page for the organizer
-*/
+ */
 exports.getSettings = (req, res, next) => {
-  // Render the settings page
-  res.render("organizer/settings.ejs", {
-    title: "Site Settings",
-    siteInfo: {
-      name: "EventFlow Manager",
-      description: "Professional event management for all your needs",
-    },
-  });
+	// Get current settings from database
+	const settingsQuery = "SELECT * FROM site_settings ORDER BY id DESC LIMIT 1";
+
+	// Get statistics for the dashboard
+	const statsQueries = {
+		totalEvents: "SELECT COUNT(*) as count FROM events",
+		publishedEvents:
+			"SELECT COUNT(*) as count FROM events WHERE status = 'published'",
+		draftEvents: "SELECT COUNT(*) as count FROM events WHERE status = 'draft'",
+		totalBookings: "SELECT COUNT(*) as count FROM bookings",
+	};
+
+	global.db.get(settingsQuery, (err, settings) => {
+		if (err) {
+			next(err);
+			return;
+		}
+
+		// If no settings exist, use defaults
+		if (!settings) {
+			settings = {
+				site_name: "EventFlow Manager",
+				site_description: "Professional event management for all your needs",
+				default_general_tickets: 50,
+				default_vip_tickets: 10,
+				contact_email: "",
+				contact_phone: "",
+				booking_instructions:
+					"Please review the event details carefully before booking. Bring a valid ID to the event.",
+				require_booking_notes: 0,
+				show_remaining_tickets: 1,
+			};
+		}
+
+		// Get statistics
+		const stats = {};
+		let completedQueries = 0;
+		const totalQueries = Object.keys(statsQueries).length;
+
+		Object.keys(statsQueries).forEach((key) => {
+			global.db.get(statsQueries[key], (err, result) => {
+				if (!err && result) {
+					stats[key] = result.count;
+				} else {
+					stats[key] = 0;
+				}
+
+				completedQueries++;
+
+				if (completedQueries === totalQueries) {
+					// Render the settings page with data
+					res.render("organizer/settings.ejs", {
+						title: "Site Settings",
+						siteInfo: {
+							name: settings.site_name,
+							description: settings.site_description,
+						},
+						settings: settings,
+						stats: stats,
+					});
+				}
+			});
+		});
+	});
+};
+
+/**
+ * @desc Update Site Settings
+ * Updates site settings in the database
+ */
+exports.postSettings = (req, res, next) => {
+	const {
+		site_name,
+		site_description,
+		default_general_tickets,
+		default_vip_tickets,
+		contact_email,
+		contact_phone,
+		booking_instructions,
+		require_booking_notes,
+		show_remaining_tickets,
+	} = req.body;
+
+	// Validate required fields
+	if (!site_name || site_name.trim() === "") {
+		return res.status(400).json({ error: "Site name is required" });
+	}
+
+	const updateQuery = `
+    UPDATE site_settings 
+    SET site_name = ?, 
+        site_description = ?, 
+        default_general_tickets = ?, 
+        default_vip_tickets = ?, 
+        contact_email = ?, 
+        contact_phone = ?, 
+        booking_instructions = ?, 
+        require_booking_notes = ?, 
+        show_remaining_tickets = ?, 
+        updated_at = datetime('now')
+    WHERE id = (SELECT id FROM site_settings ORDER BY id DESC LIMIT 1)
+  `;
+
+	const values = [
+		site_name.trim(),
+		site_description || "",
+		parseInt(default_general_tickets) || 50,
+		parseInt(default_vip_tickets) || 10,
+		contact_email || "",
+		contact_phone || "",
+		booking_instructions ||
+			"Please review the event details carefully before booking. Bring a valid ID to the event.",
+		require_booking_notes ? 1 : 0,
+		show_remaining_tickets ? 1 : 0,
+	];
+
+	global.db.run(updateQuery, values, function (err) {
+		if (err) {
+			next(err);
+			return;
+		}
+
+		// If no rows were affected, create new settings
+		if (this.changes === 0) {
+			const insertQuery = `
+        INSERT INTO site_settings (
+          site_name, site_description, default_general_tickets, default_vip_tickets,
+          contact_email, contact_phone, booking_instructions, require_booking_notes,
+          show_remaining_tickets, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+      `;
+
+			global.db.run(insertQuery, values, function (err) {
+				if (err) {
+					next(err);
+					return;
+				}
+
+				res.redirect("/organizer/settings?saved=true");
+			});
+		} else {
+			res.redirect("/organizer/settings?saved=true");
+		}
+	});
 };

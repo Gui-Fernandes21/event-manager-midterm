@@ -1,142 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/main.css" />
-    <title>Attendee Home Page - <%= siteInfo.name %></title>
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            <div class="header-content">
-                <h1>Attendee Home Page</h1>
-                <div class="site-info">
-                    <h2 class="site-name"><%= siteInfo.name %></h2>
-                    <p class="site-description"><%= siteInfo.description %></p>
-                </div>
-            </div>
-            <div class="header-actions">
-                <% if (typeof user !== 'undefined' && user) { %>
-                    <div class="nav-user-info">
-                        Welcome, <span class="nav-user-name"><%= user.user_name %></span>
-                    </div>
-                    <a href="/auth/logout" class="btn btn-logout">Logout</a>
-                <% } else { %>
-                    <a href="/auth/login" class="btn btn-secondary">Login</a>
-                    <a href="/auth/register" class="btn btn-primary">Sign Up</a>
-                <% } %>
-            </div>
-        </header>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="/main.css" />
+		<title>Attendee Home Page - <%= siteInfo.name %></title>
+	</head>
+	<body>
+		<div class="container">
+			<header class="header">
+				<div class="header-content">
+					<h1>Attendee Home Page</h1>
+					<div class="site-info">
+						<h2 class="site-name"><%= siteInfo.name %></h2>
+						<p class="site-description"><%= siteInfo.description %></p>
+					</div>
+				</div>
+				<div class="header-actions">
+					<a href="/" class="btn btn-primary">Home Page</a>
+          <% if (typeof user !== 'undefined' && user) { %>
+					<div class="nav-user-info">
+						Welcome, <span class="nav-user-name"><%= user.user_name %></span>
+					</div>
+					<a href="/auth/logout" class="btn btn-logout">Logout</a>
+					<% } else { %>
+					<a href="/auth/login" class="btn btn-secondary">Login</a>
+					<a href="/auth/register" class="btn btn-primary">Sign Up</a>
+					<% } %>
+				</div>
+			</header>
 
-        <main class="events-section">
-            <h2 class="section-title">Upcoming Events</h2>
-            
-            <% if (events && events.length > 0) { %>
-                <div class="events-list">
-                    <% events.forEach(function(event) { %>
-                        <div class="event-item" onclick="window.location.href='/attendees/event/<%= event.event_id %>'">
-                            <div class="event-item-header">
-                                <h3 class="event-title"><%= event.title %></h3>
-                                <div class="event-date-badge">
-                                    <div class="event-date">
-                                        <%= new Date(event.date).toLocaleDateString('en-US', { 
-                                            weekday: 'short',
-                                            month: 'short', 
-                                            day: 'numeric' 
-                                        }) %>
-                                    </div>
-                                    <div class="event-time">
-                                        <%= new Date(event.date).toLocaleTimeString('en-US', { 
-                                            hour: '2-digit', 
-                                            minute: '2-digit' 
-                                        }) %>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="event-item-body">
-                                <p class="event-description">
-                                    <%= event.description ? 
-                                        (event.description.length > 150 ? 
-                                         event.description.substring(0, 150) + '...' : 
-                                         event.description) : 
-                                        'No description available' %>
-                                </p>
-                                
-                                <div class="event-meta">
-                                    <div class="ticket-availability">
-                                        <% if (event.tickets_general > 0) { %>
-                                            <span class="ticket-type">General: <%= event.tickets_general %> available</span>
-                                        <% } %>
-                                        <% if (event.tickets_vip > 0) { %>
-                                            <span class="ticket-type">VIP: <%= event.tickets_vip %> available</span>
-                                        <% } %>
-                                        <% if (event.tickets_general === 0 && event.tickets_vip === 0) { %>
-                                            <span class="ticket-type">Tickets available</span>
-                                        <% } %>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="event-item-footer">
-                                <button class="btn btn-primary event-book-btn">
-                                    View Details & Book
-                                </button>
-                                <div class="event-published">
-                                    Published <%= new Date(event.publishedAt).toLocaleDateString() %>
-                                </div>
-                            </div>
-                        </div>
-                    <% }); %>
-                </div>
-            <% } else { %>
-                <div class="no-events">
-                    <div class="no-events-content">
-                        <h3>No Events Available</h3>
-                        <p>There are currently no events scheduled. Please check back later!</p>
-                        <div class="no-events-icon">📅</div>
-                    </div>
-                </div>
-            <% } %>
-        </main>
+			<main class="events-section">
+				<h2 class="section-title">Upcoming Events</h2>
 
-        <footer class="attendee-footer">
-            <div class="footer-content">
-                <p>&copy; 2025 <%= siteInfo.name %>. All rights reserved.</p>
-                <p>Questions? Contact us for support.</p>
-            </div>
-        </footer>
-    </div>
+				<% if (events && events.length > 0) { %>
+				<div class="events-list">
+					<% events.forEach(function(event) { %>
+					<div
+						class="event-item"
+						onclick="window.location.href='/attendees/event/<%= event.event_id %>'"
+					>
+						<div class="event-item-header">
+							<h3 class="event-title"><%= event.title %></h3>
+							<div class="event-date-badge">
+								<div class="event-date">
+									<%= new Date(event.date).toLocaleDateString('en-US', {
+									weekday: 'short', month: 'short', day: 'numeric' }) %>
+								</div>
+								<div class="event-time">
+									<%= new Date(event.date).toLocaleTimeString('en-US', { hour:
+									'2-digit', minute: '2-digit' }) %>
+								</div>
+							</div>
+						</div>
 
-    <script>
-        // Add hover effects and click handling
-        document.querySelectorAll('.event-item').forEach(item => {
-            item.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px)';
-            });
-            
-            item.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
+						<div class="event-item-body">
+							<p class="event-description">
+								<%= event.description ? (event.description.length > 150 ?
+								event.description.substring(0, 150) + '...' : event.description)
+								: 'No description available' %>
+							</p>
 
-        // Prevent button click from triggering row click
-        document.querySelectorAll('.event-book-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                // The click will naturally follow the href set on the parent div
-            });
-        });
+							<div class="event-meta">
+								<div class="ticket-availability">
+									<% if (event.remainingTickets.general > 0) { %>
+									<span class="ticket-type"
+										>General: <%= event.remainingTickets.general %> available</span
+									>
+									<% } %> <% if (event.remainingTickets.vip > 0) { %>
+									<span class="ticket-type"
+										>VIP: <%= event.remainingTickets.vip %> available</span
+									>
+									<% } %> 
+                  <% if (event.isSoldOut) { %>
+									<span class="ticket-type sold-out">Tickets sold out</span>
+									<% } %>
+								</div>
+							</div>
+						</div>
 
-        // Add loading animation for event clicks
-        document.querySelectorAll('.event-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const btn = this.querySelector('.event-book-btn');
-                btn.innerHTML = 'Loading...';
-                btn.disabled = true;
-            });
-        });
-    </script>
-</body>
+						<div class="event-item-footer">
+							<button
+								onclick="window.location.href='/attendees/event/<%= event.event_id %>'"
+								class="btn btn-primary event-book-btn"
+							>
+								View Details & Book
+							</button>
+							<div class="event-published">
+								Published <%= new Date(event.publishedAt).toLocaleDateString()
+								%>
+							</div>
+						</div>
+					</div>
+					<% }); %>
+				</div>
+				<% } else { %>
+				<div class="no-events">
+					<div class="no-events-content">
+						<h3>No Events Available</h3>
+						<p>
+							There are currently no events scheduled. Please check back later!
+						</p>
+						<div class="no-events-icon">📅</div>
+					</div>
+				</div>
+				<% } %>
+			</main>
+
+			<footer class="attendee-footer">
+				<div class="footer-content">
+					<p>&copy; 2025 <%= siteInfo.name %>. All rights reserved.</p>
+					<p>Questions? Contact us for support.</p>
+				</div>
+			</footer>
+		</div>
+
+		<script>
+			// Add hover effects and click handling
+			document.querySelectorAll(".event-item").forEach((item) => {
+				item.addEventListener("mouseenter", function () {
+					this.style.transform = "translateY(-5px)";
+				});
+
+				item.addEventListener("mouseleave", function () {
+					this.style.transform = "translateY(0)";
+				});
+			});
+
+			// Prevent button click from triggering row click
+			document.querySelectorAll(".event-book-btn").forEach((btn) => {
+				btn.addEventListener("click", function (e) {
+					e.stopPropagation();
+					// The click will naturally follow the href set on the parent div
+				});
+			});
+
+			// Add loading animation for event clicks
+			document.querySelectorAll(".event-item").forEach((item) => {
+				item.addEventListener("click", function () {
+					const btn = this.querySelector(".event-book-btn");
+					btn.innerHTML = "Loading...";
+					btn.disabled = true;
+				});
+			});
+		</script>
+	</body>
 </html>

@@ -12,7 +12,7 @@
 				<div class="header-content">
 					<h1>Attendee Event Page</h1>
 					<div class="site-info">
-						<h2 class="site-name"><%= siteInfo.name %></h2>
+						<h2 class="site-name"><%= settings.site_name %></h2>
 					</div>
 				</div>
 				<div class="header-actions">
@@ -74,10 +74,14 @@
 									<h4>General Admission</h4>
 									<div class="ticket-details">
 										<div class="ticket-price">$25.00</div>
+										<% if (settings.show_remaining_tickets) { %>
 										<div class="ticket-remaining">
 											<%= remainingTickets.general %> of <%= event.tickets_general %> 
                       remaining
 										</div>
+										<% } else { %>
+										<div class="ticket-available">Available</div>
+										<% } %>
 									</div>
 								</div>
 								<% } %> <% if (event.tickets_vip > 0) { %>
@@ -85,10 +89,14 @@
 									<h4>VIP Access</h4>
 									<div class="ticket-details">
 										<div class="ticket-price">$75.00</div>
+										<% if (settings.show_remaining_tickets) { %>
 										<div class="ticket-remaining">
 											<%= remainingTickets.vip %> of <%= event.tickets_vip %>
 											remaining
 										</div>
+										<% } else { %>
+										<div class="ticket-available">Available</div>
+										<% } %>
 									</div>
 								</div>
 								<% } %>
@@ -139,7 +147,7 @@
 										class="ticket-quantity"
 									/>
 									<span class="ticket-max"
-										>Max: <%= remainingTickets.general %></span
+										><% if (settings.show_remaining_tickets) { %>Max: <%= remainingTickets.general %><% } else { %>Available<% } %></span
 									>
 								</div>
 							</div>
@@ -163,7 +171,7 @@
 										class="ticket-quantity"
 									/>
 									<span class="ticket-max"
-										>Max: <%= remainingTickets.vip %></span
+										><% if (settings.show_remaining_tickets) { %>Max: <%= remainingTickets.vip %><% } else { %>Available<% } %></span
 									>
 								</div>
 							</div>
@@ -182,16 +190,30 @@
 						</div>
 
 						<% if (remainingTickets.general > 0 || remainingTickets.vip > 0) { %>
+						
+						<% if (settings.booking_instructions) { %>
+						<div class="form-section">
+							<h3>Booking Information</h3>
+							<div class="booking-instructions">
+								<p><%= settings.booking_instructions %></p>
+							</div>
+						</div>
+						<% } %>
+						
 						<div class="form-section">
 							<h3>Additional Information</h3>
 							<div class="form-group">
-								<label for="notes">Special Requests or Notes (Optional)</label>
+								<label for="notes">Special Requests or Notes <% if (settings.require_booking_notes) { %><span style="color: red;">*</span><% } else { %>(Optional)<% } %></label>
 								<textarea
 									id="notes"
 									name="notes"
 									rows="3"
 									placeholder="Any special dietary requirements, accessibility needs, or other notes..."
+									<% if (settings.require_booking_notes) { %>required<% } %>
 								></textarea>
+								<% if (settings.require_booking_notes) { %>
+								<small class="form-help" style="color: #dc3545;">Notes are required for booking this event.</small>
+								<% } %>
 							</div>
 						</div>
 

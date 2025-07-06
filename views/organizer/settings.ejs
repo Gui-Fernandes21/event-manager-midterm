@@ -22,6 +22,10 @@
 			</header>
 
 			<div class="settings-container">
+				<% if (typeof query !== 'undefined' && query.saved) { %>
+				<div class="alert alert-success">Settings saved successfully!</div>
+				<% } %>
+
 				<form action="/organizer/settings" method="post" class="settings-form">
 					<div class="form-section">
 						<h2>Event Manager Information</h2>
@@ -32,8 +36,9 @@
 								type="text"
 								id="site_name"
 								name="site_name"
-								value="<%= siteInfo.name %>"
+								value="<%= settings.site_name %>"
 								placeholder="Your organization or event manager name"
+								required
 							/>
 							<small class="form-help"
 								>This name will appear on all public pages</small
@@ -48,7 +53,7 @@
 								rows="4"
 								placeholder="Brief description of your events or organization"
 							>
-<%= siteInfo.description %></textarea
+<%= settings.site_description %></textarea
 							>
 							<small class="form-help"
 								>Describe what kind of events you organize</small
@@ -68,7 +73,7 @@
 									type="number"
 									id="default_general_tickets"
 									name="default_general_tickets"
-									value="50"
+									value="<%= settings.default_general_tickets %>"
 									min="0"
 								/>
 							</div>
@@ -79,7 +84,7 @@
 									type="number"
 									id="default_vip_tickets"
 									name="default_vip_tickets"
-									value="10"
+									value="<%= settings.default_vip_tickets %>"
 									min="0"
 								/>
 							</div>
@@ -95,6 +100,7 @@
 								type="email"
 								id="contact_email"
 								name="contact_email"
+								value="<%= settings.contact_email %>"
 								placeholder="contact@yourorganization.com"
 							/>
 							<small class="form-help"
@@ -108,6 +114,7 @@
 								type="tel"
 								id="contact_phone"
 								name="contact_phone"
+								value="<%= settings.contact_phone %>"
 								placeholder="+1 (555) 123-4567"
 							/>
 						</div>
@@ -124,7 +131,7 @@
 								rows="3"
 								placeholder="Instructions for attendees on how to book events..."
 							>
-Please review the event details carefully before booking. Bring a valid ID to the event.</textarea
+<%= settings.booking_instructions %></textarea
 							>
 							<small class="form-help"
 								>These instructions will appear on all event booking
@@ -132,24 +139,19 @@ Please review the event details carefully before booking. Bring a valid ID to th
 							>
 						</div>
 
-						<div class="form-group">
-							<input
-								type="checkbox"
-								id="require_booking_notes"
-								name="require_booking_notes"
-							/>
+						<div class="form-group checkbox-group">
+							<input type="checkbox" id="require_booking_notes"
+							name="require_booking_notes" <%= settings.require_booking_notes ?
+							'checked' : '' %> />
 							<label for="require_booking_notes"
 								>Require booking notes from attendees</label
 							>
 						</div>
 
-						<div class="form-group">
-							<input
-								type="checkbox"
-								id="show_remaining_tickets"
-								name="show_remaining_tickets"
-								checked
-							/>
+						<div class="form-group checkbox-group">
+							<input type="checkbox" id="show_remaining_tickets"
+							name="show_remaining_tickets" <%= settings.show_remaining_tickets
+							? 'checked' : '' %> />
 							<label for="show_remaining_tickets"
 								>Show remaining ticket count to attendees</label
 							>
@@ -169,19 +171,19 @@ Please review the event details carefully before booking. Bring a valid ID to th
 					<div class="stats-grid">
 						<div class="stat-card">
 							<h4>Total Events</h4>
-							<p class="stat-number">--</p>
+							<p class="stat-number"><%= stats.totalEvents || 0 %></p>
 						</div>
 						<div class="stat-card">
 							<h4>Published Events</h4>
-							<p class="stat-number">--</p>
+							<p class="stat-number"><%= stats.publishedEvents || 0 %></p>
 						</div>
 						<div class="stat-card">
 							<h4>Draft Events</h4>
-							<p class="stat-number">--</p>
+							<p class="stat-number"><%= stats.draftEvents || 0 %></p>
 						</div>
 						<div class="stat-card">
 							<h4>Total Bookings</h4>
-							<p class="stat-number">--</p>
+							<p class="stat-number"><%= stats.totalBookings || 0 %></p>
 						</div>
 					</div>
 				</div>
@@ -189,10 +191,14 @@ Please review the event details carefully before booking. Bring a valid ID to th
 		</div>
 
 		<script>
-			// Load statistics (you could implement this with an API call)
+			// Handle success message
 			document.addEventListener("DOMContentLoaded", function () {
-				// This would typically fetch from an API endpoint
-				// For now, we'll leave the placeholder values
+				const urlParams = new URLSearchParams(window.location.search);
+				if (urlParams.get("saved") === "true") {
+					// Remove the query parameter from URL without refreshing
+					const newUrl = window.location.pathname;
+					window.history.replaceState({}, document.title, newUrl);
+				}
 			});
 
 			// Form validation
@@ -200,12 +206,42 @@ Please review the event details carefully before booking. Bring a valid ID to th
 				.querySelector(".settings-form")
 				.addEventListener("submit", function (e) {
 					const siteName = document.getElementById("site_name").value.trim();
+					const defaultGeneral = parseInt(
+						document.getElementById("default_general_tickets").value
+					);
+					const defaultVip = parseInt(
+						document.getElementById("default_vip_tickets").value
+					);
 
 					if (!siteName) {
 						alert("Please enter an event manager name.");
 						e.preventDefault();
 						return;
 					}
+
+					if (isNaN(defaultGeneral) || defaultGeneral < 0) {
+						alert("Please enter a valid number for default general tickets.");
+						e.preventDefault();
+						return;
+					}
+
+					if (isNaN(defaultVip) || defaultVip < 0) {
+						alert("Please enter a valid number for default VIP tickets.");
+						e.preventDefault();
+						return;
+					}
+
+					// Show loading state
+					const submitBtn = this.querySelector('button[type="submit"]');
+					const originalText = submitBtn.textContent;
+					submitBtn.textContent = "Saving...";
+					submitBtn.disabled = true;
+
+					// Re-enable button after a short delay if form submission fails
+					setTimeout(() => {
+						submitBtn.textContent = originalText;
+						submitBtn.disabled = false;
+					}, 5000);
 				});
 		</script>
 	</body>

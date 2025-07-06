@@ -16,10 +16,11 @@ router.get("/sharing-link/:id", organizerControllers.getShareLink);
 
 router.get("/edit-event/:id", organizerControllers.getEditEvent);
 
+router.get("/create-event", organizerControllers.createEvent);
+ 
+router.get("/settings", organizerControllers.getSettings);
 
 // POST ROUTES ---------------------------------------------------------------------
-
-router.post("/create-event", organizerControllers.createEvent);
 
 router.post("/edit-event/:id", organizerControllers.postEditEvent);
 
@@ -27,6 +28,7 @@ router.post("/publish-event/:id", organizerControllers.publishEvent);
 
 router.post("/delete-event/:id", organizerControllers.deleteEvent);
 
-router.get("/settings", organizerControllers.getSettings);
+router.post("/settings", organizerControllers.postSettings);
 
 module.exports = router;
+ 

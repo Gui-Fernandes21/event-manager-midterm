@@ -1,0 +1,76 @@
+
+/* Settings page styles */
+.settings-container {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 30px;
+}
+
+.settings-form {
+  margin: 0;
+  max-width: none;
+	background: white;
+	border-radius: 15px;
+	padding: 30px;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.settings-info {
+	background: white;
+	border-radius: 15px;
+	padding: 25px;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+	height: fit-content;
+}
+
+.settings-info h3 {
+	color: #2c3e50;
+	margin-bottom: 20px;
+}
+
+.stats-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 15px;
+}
+
+.stat-card {
+	text-align: center;
+	padding: 15px;
+	background: #f8f9fa;
+	border-radius: 8px;
+}
+
+.stat-card h4 {
+	color: #666;
+	font-size: 0.9rem;
+	margin-bottom: 5px;
+}
+
+.stat-number {
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: #2c3e50;
+	margin: 0;
+}
+
+.checkbox-group {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.checkbox-group label {
+  /* width: 100%; */
+  font-size: 0.95rem;
+  color: #2c3e50;
+  margin-bottom: 0 !important;
+}
+
+.checkbox-group > input {
+  width: 20px !important;
+  height: 20px;
+  accent-color: #667eea; /* Custom checkbox color */
+}
