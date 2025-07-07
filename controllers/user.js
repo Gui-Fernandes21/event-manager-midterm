@@ -1,3 +1,9 @@
+/**
+ * /controllers/user.js
+ * User management controller
+ * This file contains functions to handle user-related operations such as listing users and adding new users.
+ */
+
 exports.listUsers = (req, res, next) => {
 	// Define the query to fetch all users
 	const query = "SELECT * FROM users";

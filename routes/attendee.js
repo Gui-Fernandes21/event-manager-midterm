@@ -1,5 +1,5 @@
 /**
- * attendee.js
+ * /routes/attendee.js
  * Routes for attendee functionality - viewing and booking events
  */
 

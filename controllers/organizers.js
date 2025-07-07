@@ -1,4 +1,10 @@
 /**
+ * /controllers/organizers.js
+ * Organizer management controller
+ * This file contains functions to handle organizer-related operations such as viewing and managing events.
+ */
+
+/**
  * @desc Display Organizer Home Page
  * Shows published and draft events with management options
  */

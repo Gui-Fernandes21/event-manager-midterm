@@ -1,3 +1,8 @@
+/**
+ * /routes/attendee.js
+ * Routes for attendee functionality - viewing and booking events
+ */
+
 const { format, parseISO } = require("date-fns");
 
 /**

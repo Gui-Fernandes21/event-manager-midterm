@@ -1,5 +1,5 @@
 /**
- * auth.js
+ * /middlewares/auth.js
  * Authentication middleware for checking if users are authenticated
  * This middleware provides session-based authentication functionality
  */

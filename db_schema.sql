@@ -1,3 +1,8 @@
+/* * db_schema.sql
+ * This file contains the SQL schema for the EventFlow Manager application.
+ * It defines the structure of the database, including tables and relationships.
+ */
+
 
 -- This makes sure that foreign_key constraints are observed and that errors will be thrown for violations
 PRAGMA foreign_keys=ON;

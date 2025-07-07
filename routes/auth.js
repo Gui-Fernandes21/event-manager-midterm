@@ -1,5 +1,5 @@
 /**
- * auth.js - Authentication routes
+ * /routes/auth.js - Authentication routes
  * Handles login, logout, and registration functionality
  */
 

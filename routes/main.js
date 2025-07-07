@@ -1,3 +1,9 @@
+/**
+ * /routes/main.js
+ * Main application routes
+ * This file sets up the main routes for the EventFlow Manager application.
+ */
+
 const express = require("express");
 const router = express.Router();
 

@@ -30,14 +30,14 @@ const sqlite3 = require('sqlite3').verbose();
 global.db = new sqlite3.Database('./database.db',function(err){
     if(err){
         console.error(err);
-        process.exit(1); // bail out we can't connect to the DB
+        process.exit(1);
     } else {
         console.log("Database connected");
-        global.db.run("PRAGMA foreign_keys=ON"); // tell SQLite to pay attention to foreign key constraints
+        global.db.run("PRAGMA foreign_keys=ON"); 
     }
 });
 
-// Load user information for all requests (makes user data available in views)
+// Load user information for all requests
 app.use(loadUser);
 
 app.use('/', mainRoutes);
@@ -53,14 +53,3 @@ app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);
 	console.log(`Visit http://localhost:${port} to get started`);
 });
-
-
-/**
- * OPTIONAL: Update your database schema to support admin users
- *
- * Add this to your db_schema.sql if you want admin functionality:
- *
- * ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0;
- *
- * Then you can use the requireAdmin middleware for admin-only routes.
- */
