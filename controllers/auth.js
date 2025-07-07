@@ -52,12 +52,9 @@ exports.register = (req, res, next) => {
 		}
 
 		// Store the new user in the database
-		const insertQuery =
-			"INSERT INTO users (user_name, email, password, role, createdAt) VALUES (?, ?, ?, ?, ?)";
-		global.db.run(
-			insertQuery,
-			[user_name, email, hash, "attendee", new Date()],
-			function (err) {
+		const insertQuery = "INSERT INTO users (user_name, email, password, role, createdAt) VALUES (?, ?, ?, ?, ?)";
+		
+		global.db.run(insertQuery, [user_name, email, hash, "attendee", new Date().toISOString()], function (err) {
 				if (err) {
 					return next(err);
 				}
@@ -117,7 +114,7 @@ exports.login = (req, res, next) => {
 			}
 			// Passwords match, create session
 			createUserSession(req, user);
-			
+
 			res.redirect("/");
 		});
 	});

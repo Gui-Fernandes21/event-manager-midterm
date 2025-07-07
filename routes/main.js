@@ -22,12 +22,7 @@ router.use("/organizer", organizerRoutes);
 router.use("/attendees", attendeeRoutes);
 
 // Handle requests to the home page
-router.get("/", (req, res, next) => {
-  if (!req.session || !req.session.user_id) {
-    res.redirect("/auth/login");
-    return;
-  }
-  
+router.get("/", (req, res, next) => {  
   // Get site settings
   const settingsQuery = "SELECT site_name, site_description FROM site_settings ORDER BY id DESC LIMIT 1";
   
